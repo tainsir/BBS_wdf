@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>账户设置</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap.css' %}">
+    <script src="{% static 'jquery/jquery-3.3.1.js' %} "></script>
+    <script src="{% static 'bootstrap-3.3.7-dist/js/bootstrap.js' %}"></script>
+    <style>
+
+        .article_right span {
+            margin-right: 7px;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .wrapcenter {
+            position: relative;
+            width: 100%;
+            height: 35px;
+            font-size: 12px;
+        }
+
+        hr {
+            margin: 0;
+        }
+
+        .center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .center a {
+            margin-right: 5px;
+        }
+        .my_img {
+            vertical-align: bottom;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="{% url 'index' %}">首页</a></li>
+                <li><a href="JavaScript:void(0)">新闻</a></li>
+                <li><a href="JavaScript:void(0)">招聘</a></li>
+                <li><a href="JavaScript:void(0)">找找看</a></li>
+                <li><a href="JavaScript:void(0)">知识库</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <nav class="navbar navbar-default navbar-inverse">
+        <div class="navbar-header">
+            <span class="navbar-brand">欢迎你,{{ request.user.username }}</span>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="JavaScript:void(0)"><img src="/medi/{{ request.user.avatar }}/" alt="" width="20" height="20"></a></li>
+            <li><a href="JavaScript:void(0)" class="nav_li">{{ user.username }}</a></li>
+            <li><a href="{% url 'blog' user %}" class="nav_li">我的博客</a></li>
+            <li><a href="{% url 'set' %}" class="nav_li">设置</a></li>
+            <li><a href="{% url 'out' %}" class="nav_li">退出</a></li>
+        </ul>
+    </nav>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="list-group">
+                <a href="JavaScript:void(0)" class="list-group-item list-group-item-success">博客</a>
+                <a href="JavaScript:void(0)" class="list-group-item list-group-item-info">小组</a>
+                <a href="JavaScript:void(0)" class="list-group-item list-group-item-warning">新闻</a>
+                <a href="JavaScript:void(0)" class="list-group-item list-group-item-danger">博问</a>
+                <a href="JavaScript:void(0)" class="list-group-item list-group-item-success">收藏</a>
+                <a href="JavaScript:void(0)" class="list-group-item list-group-item-info">招聘</a>
+                <a href="JavaScript:void(0)" class="list-group-item list-group-item-danger">文库</a>
+            </div>
+        </div>
+        <div class="col-md-10">
+
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation"><a href="#avatar" aria-controls="user_set" role="tab" data-toggle="tab">上传头像</a>
+                </li>
+                <li role="presentation" class="active"><a href="#user_set" aria-controls="user_set" role="tab"
+                                                          data-toggle="tab">账户设置</a>
+                </li>
+                <li role="presentation"><a href="#info" aria-controls="info" role="tab" data-toggle="tab">基本资料</a>
+                </li>
+                <li role="presentation"><a href="#user_info" aria-controls="user_info" role="tab"
+                                           data-toggle="tab">个人信息</a>
+                </li>
+                <li role="presentation"><a href="#method" aria-controls="method" role="tab" data-toggle="tab">联系方式</a>
+                </li>
+                <li role="presentation"><a href="{% url 'backend' %}">博客设置</a></li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane" id="avatar">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">上传头像</div>
+                        <div class="panel-body">
+                            <form action="" method="post" id="form">
+                                {% csrf_token %}
+                                <label for="my_avatar" style="margin: 0">
+                                    <img src="/medi/{{ request.user.avatar }}" alt="" width="300" height="400" style="cursor: pointer" class="my_img">
+                                </label>
+                                <div style="display:inline-block;margin-left: 15px;margin-bottom: 0;vertical-align: bottom">
+                                    <div style="margin-bottom: 8px">
+                                        <span>120px&nbsp;&times;&nbsp;160px</span>
+                                    </div>
+                                    <img src="/medi/{{ request.user.avatar }}" alt="" width="120" height="160" class="my_img">
+                                </div>
+                                <input type="file" class="hide" id="my_avatar">
+                            </form>
+                            <div>
+                                    <input type="submit" class="upload_img hide" value="保存"
+                                                       style="margin-left: 10px;margin-top: 10px;">
+                                </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane active" id="user_set">
+                    <div class="panel-body">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>登录用户名<span class="right"><a href="javascript:void(0)">修改</a></span>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>您的登录用户名<span class="right">{{ request.user.username }}</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>密码<span class="right"><a href="{% url 'alter_password' %}">修改</a></span>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>您的密码<span class="right">*****</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>注册邮箱<span class="right"><a href="javascript:void(0)">修改</a></span>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>您的注册邮箱<span class="right">{{ request.user.email }}</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>通知邮箱<span class="right"><a href="javascript:void(0)">修改</a></span>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>您的通知邮箱<span class="right">{{ request.user.email }}</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>回复通知类型 <span class="right"><a
+                                        href="javascript:void(0)">修改</a></span></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>您的回复通知类型 <span class="right">邮箱</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="info">
+                    <div class="panel-body">
+                        <table class="table table-hover">
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <span class='right' style="margin-left: 20px;">显示在首页</span>
+                                    <span class='right'>谁可以看到</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="name">姓名:</label><input type="text" id="name">
+                                    <div class="checkbox right" style="margin-top: 5px;">
+                                        <input type="checkbox">
+                                    </div>
+                                    <div class="right" style="margin-right: 90px;margin-top: 5px;">
+                                        <select name="major">
+                                            <option value="computer" selected> 任何人</option>
+                                            <option value="archaeology">仅好友</option>
+                                            <option value="medicine">个人</option>
+                                        </select>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="name">性别:</label>
+                                    <input type="radio" name="sex" value="male">男
+                                    <input type="radio" name="sex" value="female">女
+                                    <div class="checkbox right" style="margin-top: 5px;">
+                                        <input type="checkbox">
+                                    </div>
+                                    <div class="right" style="margin-right: 90px;margin-top: 5px;">
+                                        <select name="major">
+                                            <option value="computer" selected> 任何人</option>
+                                            <option value="archaeology">仅好友</option>
+                                            <option value="medicine">个人</option>
+                                        </select>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="job">职位:</label><input type="text" id="job">
+                                    <div class="checkbox right" style="margin-top: 5px;">
+                                        <input type="checkbox">
+                                    </div>
+                                    <div class="right" style="margin-right: 90px;margin-top: 5px;">
+                                        <select name="major">
+                                            <option value="computer" selected> 任何人</option>
+                                            <option value="archaeology">仅好友</option>
+                                            <option value="medicine">个人</option>
+                                        </select>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="company">单位:</label><input type="text" id="company">
+                                    <div class="checkbox right" style="margin-top: 5px;">
+                                        <input type="checkbox">
+                                    </div>
+                                    <div class="right" style="margin-right: 90px;margin-top: 5px;">
+                                        <select name="major">
+                                            <option value="computer" selected> 任何人</option>
+                                            <option value="archaeology">仅好友</option>
+                                            <option value="medicine">个人</option>
+                                        </select>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="status">工作状况:</label>
+                                    <select name="status" id="status">
+                                        <option value="student">学生</option>
+                                        <option value="work">已工作</option>
+                                        <option value="not_work">待业中</option>
+                                        <option value="other">其他</option>
+                                    </select>
+                                    <div class="checkbox right" style="margin-top: 5px;">
+                                        <input type="checkbox">
+                                    </div>
+                                    <div class="right" style="margin-right: 90px;margin-top: 5px;">
+                                        <select name="major">
+                                            <option value="anypeople" selected> 任何人</option>
+                                            <option value="friend">仅好友</option>
+                                            <option value="personal">个人</option>
+                                        </select>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td><span style="margin-left: 30px;"><input type="button" value="保存"></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="user_info">
+                    <div class="panel-body">
+                        <table class="table table-hover">
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <span class='right' style="margin-left: 20px;">显示在首页</span>
+                                    <span class='right'>谁可以看到</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="name">姓名:</label><input type="text" id="name">
+                                    <div class="checkbox right" style="margin-top: 5px;">
+                                        <input type="checkbox">
+                                    </div>
+                                    <div class="right" style="margin-right: 90px;margin-top: 5px;">
+                                        <select name="major">
+                                            <option value="computer" selected> 任何人</option>
+                                            <option value="archaeology">仅好友</option>
+                                            <option value="medicine">个人</option>
+                                        </select>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="name">性别:</label>
+                                    <input type="radio" name="sex" value="male">男
+                                    <input type="radio" name="sex" value="female">女
+                                    <div class="checkbox right" style="margin-top: 5px;">
+                                        <input type="checkbox">
+                                    </div>
+                                    <div class="right" style="margin-right: 90px;margin-top: 5px;">
+                                        <select name="major">
+                                            <option value="computer" selected> 任何人</option>
+                                            <option value="archaeology">仅好友</option>
+                                            <option value="medicine">个人</option>
+                                        </select>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="job">职位:</label><input type="text" id="job">
+                                    <div class="checkbox right" style="margin-top: 5px;">
+                                        <input type="checkbox">
+                                    </div>
+                                    <div class="right" style="margin-right: 90px;margin-top: 5px;">
+                                        <select name="major">
+                                            <option value="computer" selected> 任何人</option>
+                                            <option value="archaeology">仅好友</option>
+                                            <option value="medicine">个人</option>
+                                        </select>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="company">单位:</label><input type="text" id="company">
+                                    <div class="checkbox right" style="margin-top: 5px;">
+                                        <input type="checkbox">
+                                    </div>
+                                    <div class="right" style="margin-right: 90px;margin-top: 5px;">
+                                        <select name="major">
+                                            <option value="computer" selected> 任何人</option>
+                                            <option value="archaeology">仅好友</option>
+                                            <option value="medicine">个人</option>
+                                        </select>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="status">工作状况:</label>
+                                    <select name="status" id="status">
+                                        <option value="student">学生</option>
+                                        <option value="work">已工作</option>
+                                        <option value="not_work">待业中</option>
+                                        <option value="other">其他</option>
+                                    </select>
+                                    <div class="checkbox right" style="margin-top: 5px;">
+                                        <input type="checkbox">
+                                    </div>
+                                    <div class="right" style="margin-right: 90px;margin-top: 5px;">
+                                        <select name="major">
+                                            <option value="anypeople" selected> 任何人</option>
+                                            <option value="friend">仅好友</option>
+                                            <option value="personal">个人</option>
+                                        </select>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td><span style="margin-left: 30px;"><input type="button" value="保存"></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="method">
+                    <div class="panel-body">
+                        <table class="table table-hover">
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <span class='right' style="margin-left: 20px;">显示在首页</span>
+                                    <span class='right'>谁可以看到</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <form action="" method="post">
+                                        {% csrf_token %}
+                                        <label for="phone">手机号:</label>
+                                        {% if user.phone %}
+                                            <input type="text" id="phone" value="{{ request.user.phone }}">
+                                        {% else %}
+                                            <input type="text" id="phone">
+                                        {% endif %}
+
+                                        <div class="checkbox right" style="margin-top: 5px;">
+                                            <input type="checkbox">
+                                        </div>
+                                        <div class="right" style="margin-right: 90px;margin-top: 5px;">
+                                            <select name="major">
+                                                <option value="computer" selected> 任何人</option>
+                                                <option value="archaeology">仅好友</option>
+                                                <option value="medicine">个人</option>
+                                            </select>
+                                        </div>
+                                    </form>
+                                </td>
+                            <tr>
+                            <tr>
+                                <td><span style="margin-left: 30px;" class="keep"><input type="button" value="保存"></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <hr>
+    <div class="wrapcenter">
+        <p class="center"><a href="JavaScript:void(0)">关于博客</a><a href="JavaScript:void(0)">联系我们</a><a
+                href="JavaScript:void(0)">广告服务</a> © 2004-2018 <a href="JavaScript:void(0)">博客</a> Powered by ASP.NET
+            Core on Linux</p>
+    </div>
+
+
+</div>
+
+<script>
+    $(function () {
+        $('.keep').on('click',function () {
+            var phone = $('#phone').val();
+            var method = {'phone':phone,'csrfmiddlewaretoken':'{{ csrf_token }}'};
+            $.ajax({
+                url:'/method/',
+                type:'post',
+                data:method,
+                success:function (data) {
+                    location.reload()
+                }
+            })
+        });
+        $('#my_avatar').on('change',function () {
+            var file_obj = $('#my_avatar')[0].files[0];
+            var filereader = new FileReader();
+            filereader.readAsDataURL(file_obj);
+            filereader.onload = function () {
+                $('.my_img').attr('src',filereader.result)
+            };
+            $('.upload_img').removeClass('hide');
+        });
+        $(".upload_img").on('click',function () {
+            var formdata = new FormData();
+            formdata.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+            formdata.append('my_avatar', $('#my_avatar')[0].files[0]);
+            console.log(formdata);
+            $.ajax({
+                url: '/upload_avatar/',
+                type: 'post',
+                processData: false,
+                contentType: false,
+                data: formdata,
+                success: function (data) {
+                    location.reload()
+                }
+            })
+
+        });
+
+    })
+
+</script>
+</body>
+</html>

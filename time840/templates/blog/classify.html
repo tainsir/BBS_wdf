@@ -1,0 +1,28 @@
+<div class="panel panel-info">
+        <div class="panel-heading list-group-item">我的分类</div>
+
+        {% for foo in category_count %}
+            <div class="panel-body list-group-item"><a href="/{{ username }}/category/{{ foo.2 }}.html">{{ foo.0 }} </a><span
+                    style="margin-left: 5px;">({{ foo.1 }})</span></div>
+        {% endfor %}
+
+    </div>
+
+
+    <div class="panel panel-info">
+        <div class="panel-heading list-group-item">我的标签</div>
+        {% for foo in tag_count %}
+            <div class="panel-body list-group-item"><a href="/{{ username }}/tag/{{ foo.2 }}.html">{{ foo.0 }} </a><span
+                    style="margin-left: 5px;">({{ foo.1 }})</span></div>
+        {% endfor %}
+    </div>
+
+    <div class="panel panel-info">
+        <div class="panel-heading list-group-item">随笔档案</div>
+
+        {% for foo in article_month %}
+            <div class="panel-body list-group-item"><a href="/{{ username }}/archive/{{ foo.0|date:"Y-m" }}.html">{{ foo.0|date:'Y年m月' }}</a> <span
+                    style="margin-left: 5px;">({{ foo.1 }})</span></div>
+        {% endfor %}
+
+    </div>

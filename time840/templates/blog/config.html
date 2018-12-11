@@ -1,0 +1,160 @@
+{% extends 'blog/backend_base.html' %}
+{% block blog_left %}
+    <script>
+        $(function () {
+            $('[role="presentation"]').removeClass('active').eq(7).addClass('active');
+            $('[role="tabpanel"]').removeClass('active').eq(7).addClass('active');
+            $('.keep').on('click', function () {
+                var blog_bg = $('.blog_bg').val();
+                var blog_ti = $('.blog_title').val();
+                var bg_title = {'blog_bg': blog_bg, 'blog_title': blog_ti, 'csrfmiddlewaretoken': '{{ csrf_token }}',};
+                $.ajax({
+                    url: '/config/',
+                    type: 'post',
+                    data: bg_title,
+                    success: function (data) {
+                        location.reload()
+                    }
+                });
+
+            });
+            var obj = document.getElementById("blog_bg");
+            for (var i = 0; i < obj.length; i++) {
+                if ('{{ user.blog.theme }}' === obj[i].value) {
+                    obj[i].selected = true
+                }
+            }
+        })
+
+    </script>
+
+    <div class="list-group">
+        <a href="JavaScript:void(0)" class="list-group-item active">操作</a>
+        <a href="JavaScript:void(0)" class="list-group-item">常用选项</a>
+        <a href="{% url 'set' %}" class="list-group-item">账户设置</a>
+        <a href="JavaScript:void(0)" class="list-group-item">头像设置</a>
+        <a href="JavaScript:void(0)" class="list-group-item">博客签名</a>
+    </div>
+{% endblock %}
+{% block set %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>登录用户名<span class="right"><a href="javascript:void(0)">修改</a></span>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>您的登录用户名<span class="right">{{ request.user.username }}</span></td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>密码<span class="right"><a href="{% url 'alter_password' %}">修改</a></span>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>您的密码<span class="right">*****</span></td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>注册邮箱<span class="right"><a href="javascript:void(0)">修改</a></span>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>您的注册邮箱<span class="right">{{ request.user.email }}</span></td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>通知邮箱<span class="right"><a href="javascript:void(0)">修改</a></span>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>您的通知邮箱<span class="right">{{ request.user.email }}</span></td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>回复通知类型 <span class="right"><a
+                            href="javascript:void(0)">修改</a></span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>您的回复通知类型 <span class="right">邮箱</span></td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>博客皮肤</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+
+                        {% csrf_token %}
+                        <select name="major" class="blog_bg" id="blog_bg">
+                            <option value="" selected>==请选择==</option>
+                            <option value="bg.jpg"> dark</option>
+                            <option value="bg_body.gif">coffee</option>
+                            <option value="qing_bg.jpg">cyan</option>
+                        </select>
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>博客标签<span class="right"></span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <span>您的博客标签:</span>
+                        {% if request.user.blog.title %}
+                            <input type="text" maxlength="64" style="width: 300px;"
+                                   class="blog_title" value="{{ request.user.blog.title }}">
+                        {% else %}
+                            <input type="text" maxlength="64" style="width: 300px;"
+                                   class="blog_title">
+                        {% endif %}
+
+
+                    </td>
+                </tr>
+                <tr>
+                    <td><span style="margin-left: 150px;" class="keep"><input type="button" value="保存"></span>
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

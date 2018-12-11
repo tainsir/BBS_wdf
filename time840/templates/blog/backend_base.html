@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>博客后台管理</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap.css' %}">
+    <script src="{% static 'jquery/jquery-3.3.1.js' %} "></script>
+    <script src="{% static 'jquery/vue-2.5.17.js' %} "></script>
+    <script src="{% static 'bootstrap-3.3.7-dist/js/bootstrap.js' %}"></script>
+    <style>
+
+        .panel {
+            border-top: none;
+        }
+
+        .pagination {
+            margin: 0;
+        }
+
+
+        .right {
+            float: right;
+        }
+
+        .article_some span {
+            margin-right: 15px;
+        }
+
+        .wrapcenter {
+            position: relative;
+            width:100%;
+            height: 35px;
+            margin: 0 auto;
+
+        }
+        .center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #article_content{
+            white-space:pre-wrap;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <nav class="navbar navbar-default navbar-inverse">
+        <div class="navbar-header">
+        </div>
+        <ul class="nav navbar-nav navbar-left">
+            <li><a href="{% url 'index' %}">首页</a></li>
+            <li><a href="JavaScript:void(0)">新闻</a></li>
+            <li><a href="JavaScript:void(0)">招聘</a></li>
+            <li><a href="JavaScript:void(0)">找找看</a></li>
+            <li><a href="JavaScript:void(0)">知识库</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="JavaScript:void(0)"><img src="/media/{{ user.avatar }}/" alt="" width="20" height="20"></a>
+            </li>
+            <li><a href="JavaScript:void(0)" class="nav_li">{{ user.username }}</a></li>
+            <li><a href="{% url 'out' %}" class="nav_li">退出</a></li>
+        </ul>
+    </nav>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            {% block blog_left %}
+            
+            {% endblock %}
+        </div>
+        <div class="col-md-10">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation"><a href="#essay" aria-controls="essay" role="tab" data-toggle="tab">随笔</a></li>
+                <li role="presentation" class="active"><a href="{% url 'backend' %}">文章</a></li>
+                <li role="presentation"><a href="#diary" aria-controls="diary" role="tab" data-toggle="tab">日记</a></li>
+                <li role="presentation"><a href="{% url 'comment' %}">评论</a></li>
+                <li role="presentation"><a href="#link" aria-controls="link" role="tab" data-toggle="tab">链接</a></li>
+                <li role="presentation"><a href="#photo" aria-controls="photo" role="tab" data-toggle="tab">相册</a></li>
+                <li role="presentation"><a href="#file" aria-controls="file" role="tab" data-toggle="tab">文件</a></li>
+                <li role="presentation"><a href="{% url 'config' %}">设置</a></li>
+                <li role="presentation"><a href="#option" aria-controls="option" role="tab" data-toggle="tab">选项</a></li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane" id="essay">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">随笔页面</div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane active" id="article">
+                    {% block article %}
+
+                    {% endblock %}
+
+
+                </div>
+                <div role="tabpanel" class="tab-pane" id="diary">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">日记页面</div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="comment">
+                   {% block comment %}
+
+                    {% endblock %}
+                </div>
+                <div role="tabpanel" class="tab-pane" id="link">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">链接页面</div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="photo">
+                   <div class="panel panel-default">
+                        <div class="panel-heading">相册页面</div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="file">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">文件页面</div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="set">
+                    {% block set %}
+
+                    {% endblock %}
+                </div>
+                <div role="tabpanel" class="tab-pane" id="option">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">选项页面</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

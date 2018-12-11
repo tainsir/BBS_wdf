@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ cur_article.title }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap.css' %}">
+    <script src="{% static 'jquery/jquery-3.3.1.js' %} "></script>
+    <script src="{% static 'bootstrap-3.3.7-dist/js/bootstrap.js' %}"></script>
+    <style>
+        body {
+            background-image: url('/statics/img/{{ user.blog.theme }}');
+            margin: 0;
+            color: #aaa;
+            font-size: 13px;
+            font-family: georgia, Verdana, Helvetica, Arial;
+            line-height: 22px;
+            font-style: normal;
+            word-break: break-all;
+            SCROLLBAR-FACE-COLOR: #111;
+            SCROLLBAR-HIGHLIGHT-COLOR: #555;
+            SCROLLBAR-SHADOW-COLOR: #555;
+            SCROLLBAR-3DLIGHT-COLOR: #111;
+            SCROLLBAR-ARROW-COLOR: #555;
+            SCROLLBAR-TRACK-COLOR: #111;
+            SCROLLBAR-DARKSHADOW-COLOR: #4c4c4c
+        }
+
+        .right {
+            float: right;
+        }
+
+        .article_right span {
+            margin-right: 7px;
+        }
+
+        .right span {
+            margin-right: 15px;
+        }
+
+        textarea {
+            width: 450px;
+            height: 300px;
+            font-size: 13px;
+            border: 1px solid #ccc;
+        }
+        .wrapcenter {
+            position: relative;
+            width:100%;
+            height: 35px;
+            margin: 0 auto;
+
+        }
+        .center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+    .diggit {
+        display: inline-block;
+        width: 46px;
+        height: 52px;
+        background: url('/statics/img/upup.gif') no-repeat;
+        text-align: center;
+        cursor: pointer;
+        margin-top: 2px;
+        padding-top: 5px;
+    }
+
+    .buryit {
+        display: inline-block;
+        margin-left: 20px;
+        width: 46px;
+        height: 52px;
+        background: url('/statics/img/downdown.gif') no-repeat;
+        text-align: center;
+        cursor: pointer;
+        margin-top: 2px;
+        padding-top: 5px;
+    }
+    .diggnum {
+        margin-left: 12px;
+    }
+    .burynum {
+        margin-left: 12px;
+    }
+    .diggword {
+        margin-top: 5px;
+        margin-left: 0;
+        font-size: 14px;
+        color: gray;
+    }
+    </style>
+</head>
+<body>
+<h1>
+    <span>
+    {% if request.user.username == user.username %}
+        <a href="{% url 'backend' %}">{{ user.username }}</a>
+    {% else %}
+        <a href="{% url 'blog' user.username %}">{{ user.username }}</a>
+    {% endif %}
+</span>
+    <span class="right" style="font-size: 15px;width:300px;">
+    {% if user.blog.title %}
+        {{ user.blog.title }}
+    {% endif %}
+</span>
+
+</h1>
+<nav class="navbar navbar-info">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{% url 'index' %}">首页</a>
+            <a class="navbar-brand" href="JavaScript:void(0)">新闻</a>
+            <a class="navbar-brand" href="JavaScript:void(0)">招聘</a>
+            <a class="navbar-brand" href="JavaScript:void(0)">找找看</a>
+            <a class="navbar-brand" href="JavaScript:void(0)">知识库</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li style="margin-right: 20px;"><span>文章:</span>{{ user.blog.article_set.count }}</li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<hr>
+<table class="table">
+    <thead>
+    <tr>
+        <td><h4><a href="{% url 'blog_article' user.username cur_article.nid %}">{{ cur_article.title }}</a></h4></td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr style="height: 800px">
+        <td>{{ cur_article.content|safe }}</td>
+    </tr>
+    <tr>
+        <td>
+            <div class="right">
+                <span>posted&nbsp;@</span>
+                <span>发布于{{ cur_article.create_time|date:'Y-m-d H:i:s' }}</span>
+                <span class="glyphicon glyphicon-comment"><a href="javascript:void(0)">评论({{ cur_article.commit_num }})</a></span>
+
+
+
+                <div class="diggit action">
+                    <span class="diggnum" id="digg_count" value="True">{{ cur_article.up_num }}</span>
+                </div>
+                <div class="buryit action">
+                    <span class="burynum" id="bury_count" value="False">{{ cur_article.down_num }}</span>
+                </div>
+                <div class="diggword" id="digg_tips" style="color: red;margin-left: 320px;"></div>
+            </div>
+
+        </td>
+    </tr>
+
+    <tr>
+        <td style="padding-top: 40px;"><h4>评论列表</h4></td>
+    </tr>
+    {% for foo in commit_list %}
+        <tr>
+            <td>
+                <span>#{{ forloop.counter }}楼</span>
+                <span style="margin-left: 15px;">{{ foo.create_time }}</span>
+                <span style="margin-left: 15px;">{{ foo.user }}</span>
+                <p class="right">
+                    <a href="javascript:void(0)"  class="reply" username="{{ foo.user }}" commit_id="{{ foo.nid }}"><span>回复</span></a>
+                    <a href="javascript:void(0)" class="quote" username="{{ foo.user }}" commit_id="{{ foo.nid }} " content="{{ foo.content }}"><span>引用</span></a>
+                </p>
+                 {% if foo.parent %}
+                    <p style="margin-top: 10px;">
+                        <span style="margin-left: 15px; ">@{{ foo.parent.user.username }} : {{ foo.parent.content }}</span>
+
+                    </p>
+
+                {% endif %}
+                <p style="margin-top: 20px;"><span style="margin-left: 35px; ">
+                    <a href="{% url 'blog' foo.user %}"><img src="/media/{{ foo.user.avatar }}/" alt="" width="20"
+                                                             height="20"></a>
+                    {{ foo.content }}</span>
+                </p>
+            </td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td>
+                <p class="right">
+                    <a href="javascript:void(0)"><span>刷新评论</span></a>
+                    <a href="javascript:void(0)"><span>刷新页面</span></a>
+                    <a href="javascript:void(0)"><span>返回顶部</span></a>
+                </p>
+
+                <h4 class="glyphicon glyphicon-ice-lolly-tasted" style="margin-top: 20px;">发表评论</h4>
+
+                <p>
+                昵称：
+                    {% if request.user.username %}
+                        <input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50"
+                              value="{{ request.user }}">
+                    {% else %}
+                        <input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50"
+                              value="">
+                    {% endif %}
+
+                </p>
+                <div class="commentbox_main">
+                    <div class="commentbox_title">
+                        <div class="commentbox_title_left">评论内容：</div>
+                    </div>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                            <textarea id="tbCommentBody" class="comment_textarea"></textarea>
+                        
+
+                    </form>
+                </div>
+                <p>
+                    <input id="btn_comment" type="button" value="提交评论">
+                    <a href="{% url 'out' %}">退出</a>
+                    <a href="javascript:void(0);" title="订阅后有新评论时会邮件通知您">订阅评论</a>
+                </p>
+            </td>
+        </tr>
+        <tr>
+        <td class="wrapcenter">
+
+            <p class="center">Copyright ©2018 {{ user.username }}</p>
+        </td>
+        </tr>
+    </tbody>
+</table>
+
+
+</body>
+<script>
+    $(function () {
+        var nid;
+        $('#btn_comment').on('click',function () {
+                console.log(nid);
+                var comment = $('.comment_textarea').val();
+                console.log(nid);
+                var comment_info = {
+                    'comment': comment,
+                    'id':'{{ id }}',
+                    'nid': nid,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                };
+                $.ajax({
+                    url: '/comment_add/',
+                    type: 'post',
+                    data: comment_info,
+                    success: function (data) {
+                        console.log(data);
+                        location.reload()
+                    }
+                })
+        });
+        $('.reply').click(function () {
+            $('.comment_textarea').focus();
+            var val = '@' + $(this).attr('username') + '\n';
+            $('.comment_textarea').val(val);
+            var id = $(this).attr('commit_id');
+            nid=id
+        });
+        $('.quote').click(function () {
+            $('.comment_textarea').focus();
+            var val = $(this).attr('content');
+            $('.comment_textarea').val(val);
+        });
+        var is =true;
+        $('.action').on('click',function () {
+            if (is){
+                 is=false;
+                var is_up = $(this).children('span').attr('value');
+                var obj =$(this).children('span');
+                var info ={
+                    'is_up':is_up,
+                    'article_id':'{{ cur_article.pk }}',
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                };
+                $.ajax({
+                    url:'/up_down/',
+                    type:'post',
+                    data:info,
+                    success:function (data) {
+                        $('.diggword').text(data.msg);
+                        console.log(Number(obj.text()));
+                        if (data.status ==='200'){
+                            obj.text(Number(obj.text())+1)
+                        }
+                         setTimeout(function () {
+                            $("#digg_tips").html("");
+                             is=true;
+
+                        }, 3000)
+                    }
+                })
+            }
+
+        })
+
+    });
+</script>
+</html>

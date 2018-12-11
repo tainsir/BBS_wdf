@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户注册</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap.css' %}">
+    <script src="{% static 'jquery/jquery-3.3.1.js' %} "></script>
+    <script src="{% static 'bootstrap-3.3.7-dist/js/bootstrap.js' %}"></script>
+    <style>
+        h1 {
+            color: darkred;
+            margin-top: 50px;
+        }
+
+        label {
+            width: 65px;
+        }
+
+        .register_btn {
+            border: 1px solid #2b669a;
+            color: firebrick;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">博客</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{% url 'index' %}">首页</a></li>
+        <li><a href="{% url 'login' %}">登录</a></li>
+        <li><a href="{% url 'register' %}">注册</a></li>
+        <li><a href="JavaScript:void(0)">帮助</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container">
+    <div class="col-md-6 col-md-offset-4">
+
+        <h1 class="col-md-offset-4">注册</h1>
+        <hr>
+        <form action="" method="post">
+            {% csrf_token %}
+            {% for foo in my_form %}
+                <div class="form-group ">
+                        <label class="control-label" for="{{ foo.auto_id }}">{{ foo.label }}:</label>{{ foo }}<span style="color:red"></span>
+                </div>
+            {% endfor %}
+        </form>
+        <button class="register_btn col-md-offset-2">注册</button>
+
+    </div>
+</div>
+<script>
+    $(function () {
+        $('.img_refresh img').on('click',function () {
+            $(this).attr('src',$(this).attr('src')+'?'+Math.random())
+        });
+        $('.register_btn').on('click',function () {
+            var username = $('.username').val();
+            var password = $('.password').val();
+            var re_password = $('.re_password').val();
+            var email = $('.email').val();
+
+            var user_info = {
+                'username':username,
+                'password':password,
+                're_password':re_password,
+                'email':email,
+                'csrfmiddlewaretoken':'{{ csrf_token }}',
+            };
+            $.ajax({
+               url:'/register/',
+               type:'post',
+               data:user_info,
+               success:function (data) {
+                   if (data.status === '200'){
+                       location.href = data.url
+                   }else {
+                        $.each(data.msg,function (key,value) {
+                            if (key === '__all__'){
+                                $('.password').next().html(value).parent().addClass('has-error')
+                            }else {
+                                $('.'+key).next().html(value).parent().addClass('has-error')
+                            }
+                        })
+                   }
+               }
+            });
+        });
+        $('.username').on('focus',function () {
+            $('.username').next().html('').parent().removeClass('has-error')
+        });
+        $('.password').on('focus',function () {
+            $('.password').next().html('').parent().removeClass('has-error')
+        });
+        $('.re_password').on('focus',function () {
+            $('.re_password').next().html('').parent().removeClass('has-error')
+        });
+        $('.email').on('focus',function () {
+            $('.email').next().html('').parent().removeClass('has-error')
+        });
+
+         $(".username").on('blur',function () {
+            $.ajax({
+                url:'/check_username/',
+                type:'post',
+                data:{'username':$(this).val(),'csrfmiddlewaretoken':'{{ csrf_token }}'},
+                success:function (data) {
+                    if( data.status=='101' ){
+                        $('.username').next().html(data.msg).parent().addClass('has-error')
+                    }
+                }
+
+            })
+        })
+
+    })
+
+
+</script>
+
+
+</body>
+</html>

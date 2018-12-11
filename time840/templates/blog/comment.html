@@ -1,0 +1,45 @@
+{% extends 'blog/backend_base.html' %}
+{% block blog_left %}
+    <script>
+        $(function () {
+            $('[role="presentation"]').removeClass('active').eq(3).addClass('active');
+            $('[role="tabpanel"]').removeClass('active').eq(3).addClass('active')
+        })
+
+    </script>
+
+    <div class="list-group">
+        <a href="JavaScript:void(0)" class="list-group-item active">操作</a>
+        <a href="JavaScript:void(0)" class="list-group-item">我发表的评论</a>
+        <a href="JavaScript:void(0)" class="list-group-item">旧版留言</a>
+        <a href="JavaScript:void(0)" class="list-group-item">订阅评论通知博文</a>
+    </div>
+{% endblock %}
+{% block comment %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-striped">
+                <tbody>
+                {% for article in user.blog.article_set.all %}
+                    {% for foo in article.commit_set.all %}
+                        <tr>
+                            <td>{{ foo.user }}
+                                <span style="margin-left: 15px;">{{ foo.create_time }}</span>
+                                <span style="margin-left: 15px;">评论了</span>
+                                <span style="margin-left: 15px;">{{ article }}:</span>
+                                <span><a href="{% url 'commit_del' foo.pk %}">删除</a></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="float:right;">{{ foo.content }}</span>
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

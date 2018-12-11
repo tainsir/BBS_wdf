@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>分类添加--{{ user.username }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'bootstrap-3.3.7-dist/css/bootstrap.css' %}">
+    <script src="{% static 'jquery/jquery-3.3.1.js' %} "></script>
+    <script src="{% static 'bootstrap-3.3.7-dist/js/bootstrap.js' %}"></script>
+    <style>
+        body {
+            background-image: url('/statics/img/{{ user.blog.theme }}');
+            background-repeat: repeat-yes;
+            margin: 0;
+            color: #aaa;
+            font-size: 13px;
+            font-family: georgia, Verdana, Helvetica, Arial;
+            line-height: 22px;
+            font-style: normal;
+            word-break: break-all;
+            line-height: 150%;
+            SCROLLBAR-FACE-COLOR: #111;
+            SCROLLBAR-HIGHLIGHT-COLOR: #555;
+            SCROLLBAR-SHADOW-COLOR: #555;
+            SCROLLBAR-3DLIGHT-COLOR: #111;
+            SCROLLBAR-ARROW-COLOR: #555;
+            SCROLLBAR-TRACK-COLOR: #111;
+            SCROLLBAR-DARKSHADOW-COLOR: #4c4c4c
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <h1>分类添加</h1>
+        <hr>
+        <form action="" method="post">
+            <h3>分类标题</h3>
+            {% csrf_token %}
+            <input type="text" style="width: 100%;" class="title">
+
+        </form>
+        <div style="margin-top: 20px;">
+            <button type="button" class="col-md-1 btn btn-warning btn-md category_add_btn">添加</button>
+
+        </div>
+
+    </div>
+</div>
+</body>
+<script>
+    $('.category_add_btn').on('click', function () {
+        var title = $('.title').val();
+        var category_info = {
+            'title':title,
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+        };
+        $.ajax({
+            url:'/category_add/',
+            type:'post',
+            data:category_info,
+            success:function (data) {
+                console.log(data);
+                location.href = data.url
+            }
+
+        })
+    })
+</script>
+</html>
